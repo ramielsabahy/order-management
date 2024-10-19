@@ -10,6 +10,8 @@ Steps to get the project up and running :
 - run `cp .env.example .env` 
 - configure the `.env` and put your database credentials
 - run `composer install`
+- run `php artisan key:generate`
+- run `php artisan passport:keys --force`
 - run `php artisan migrate --seed`
 - run `php artisan passport:client --personal `
 - run `php artisan serve`
