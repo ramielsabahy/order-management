@@ -29,6 +29,7 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
+          composer install --no-dev --prefer-dist --optimize-autoloader
 
       - name: Deploy to EC2
         env:
