@@ -60,7 +60,7 @@ jobs:
             php artisan route:cache
             php artisan view:cache
 
-            # Restart PHP-FPM service to apply changes
+            # Restart nginx service to apply changes
             sudo service nginx restart
           EOF
 
