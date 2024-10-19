@@ -17,7 +17,10 @@ jobs:
       - name: Install dependencies on GitHub runner
         run: |
           sudo apt-get update
-          sudo apt-get install -y php-cli zip unzip curl
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository ppa:ondrej/php -y
+          sudo apt-get update
+          sudo apt-get install -y php8.2 php8.2-mysql php8.2-xml php8.2-mbstring php8.2-zip php8.2-bcmath php8.2-curl
           curl -sS https://getcomposer.org/installer | php
           sudo mv composer.phar /usr/local/bin/composer
           composer install --no-dev --prefer-dist --optimize-autoloader
@@ -41,12 +44,6 @@ jobs:
           chmod 600 private_key.pem
 
           ssh -o StrictHostKeyChecking=no -i private_key.pem $SSH_USER@$EC2_IP_ADDRESS << 'EOF'
-            # Update and install PHP 8.2 on the EC2 instance
-            sudo apt-get update
-            sudo apt-get install -y software-properties-common
-            sudo add-apt-repository ppa:ondrej/php -y
-            sudo apt-get update
-            sudo apt-get install -y php8.2 php8.2-mysql php8.2-xml php8.2-mbstring php8.2-zip php8.2-bcmath php8.2-curl
 
             # Navigate to the Laravel app directory
             cd /var/www/html/order-management
