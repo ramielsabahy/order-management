@@ -15,5 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $exception) {
+           return response()->json(['error' => 'Too many requests.'], $exception->getStatusCode());
+        });
     })->create();

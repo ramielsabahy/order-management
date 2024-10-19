@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->integer('quantity');
             $table->float('price');
-            $table->enum('status', ['Pending', 'Paid', 'Canceled']);
+            $table->enum('status', ['Pending', 'Paid', 'Canceled'])->default('Pending');
             $table->timestamps();
         });
     }
