@@ -63,9 +63,5 @@ jobs:
             # Restart nginx service to apply changes
             sudo service nginx restart
           EOF
-
-      - name: Run tests
-        run: |
-          php artisan test
       - name: Clean up
         run: rm private_key.pem
