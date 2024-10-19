@@ -41,7 +41,11 @@ jobs:
           chmod 600 private_key.pem
 
           ssh -o StrictHostKeyChecking=no -i private_key.pem $SSH_USER@$EC2_IP_ADDRESS << 'EOF'
-            cd /var/www/your-laravel-app-directory
+            sudo dpkg -l | grep php | tee packages.txt
+            sudo add-apt-repository ppa:ondrej/php
+            sudo apt-get update
+            sudo apt-get install -y php8.2 php8.2-mysql php8.2-xml php8.2-mbstring php8.2-zip
+            cd /var/www/html/order-management
             git pull origin main
             composer install --no-dev --prefer-dist --optimize-autoloader
             php artisan migrate --force
