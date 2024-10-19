@@ -30,4 +30,5 @@ class PayPalController extends BaseAPIController
         ]);
         return $this->errorResponse('Payment cancelled');
     }
+
 }
