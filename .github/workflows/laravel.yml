@@ -63,6 +63,7 @@ jobs:
 
             # Restart nginx service to apply changes
             sudo service nginx restart
+            sudo service php8.2-fpm restart
           EOF
       - name: Clean up
         run: rm private_key.pem
