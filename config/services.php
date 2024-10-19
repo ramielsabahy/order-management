@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'paypal' => [
+        'endpoint_v2'   => env('PAYPAL_ENDPOINT').'/v2',
+        'endpoint_v1'   => env('PAYPAL_ENDPOINT').'/v1',
+        'client_id'     => env('PAYPAL_CLIENT_ID'),
+        'client_secret' => env('PAYPAL_CLIENT_SECRET'),
+        'mode'          => env('PAYPAL_MODE', 'sandbox'),
+    ]
+
 ];
