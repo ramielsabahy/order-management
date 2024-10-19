@@ -54,6 +54,10 @@ jobs:
             # Run migrations
             php artisan migrate --force
 
+            php artisan passport:keys --force
+            sudo chown www-data:www-data storage/oauth-*.key
+            sudo chmod 600 storage/oauth-*.key
+
             # Clear and cache configurations
             php artisan optimize:clear
             php artisan test
