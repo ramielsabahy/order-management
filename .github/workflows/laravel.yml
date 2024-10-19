@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger deployments from
+      - main  # Trigger on the 'main' branch. Change it as needed.
 
 jobs:
   deploy:
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install dependencies on GitHub runner
         run: |
           sudo apt-get update
           sudo apt-get install -y php-cli zip unzip curl
@@ -41,16 +41,33 @@ jobs:
           chmod 600 private_key.pem
 
           ssh -o StrictHostKeyChecking=no -i private_key.pem $SSH_USER@$EC2_IP_ADDRESS << 'EOF'
-            sudo dpkg -l | grep php | tee packages.txt
-            sudo add-apt-repository ppa:ondrej/php
+            # Update and install PHP 8.2 on the EC2 instance
             sudo apt-get update
-            sudo apt-get install -y php8.2 php8.2-mysql php8.2-xml php8.2-mbstring php8.2-zip
+            sudo apt-get install -y software-properties-common
+            sudo add-apt-repository ppa:ondrej/php -y
+            sudo apt-get update
+            sudo apt-get install -y php8.2 php8.2-mysql php8.2-xml php8.2-mbstring php8.2-zip php8.2-bcmath php8.2-curl
+
+            # Navigate to the Laravel app directory
             cd /var/www/html/order-management
+
+            # Pull the latest code
             git pull origin main
+
+            # Install dependencies
             composer install --no-dev --prefer-dist --optimize-autoloader
+
+            # Run migrations
             php artisan migrate --force
-            php artisan optimize:clear
-            sudo service nginx restart
+
+            # Clear and cache configurations
+            php artisan cache:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            # Restart PHP-FPM service to apply changes
+            sudo service php8.2-fpm restart
           EOF
 
       - name: Clean up
