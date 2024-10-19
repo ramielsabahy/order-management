@@ -66,6 +66,6 @@ jobs:
 
       - name: Run tests
         run: |
-          ./vendor/bin/pest
+          php artisan test
       - name: Clean up
         run: rm private_key.pem
