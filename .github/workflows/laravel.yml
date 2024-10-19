@@ -30,10 +30,6 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: Run tests
-        run: |
-          ./vendor/bin/pest
-
       - name: Deploy to EC2
         env:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
@@ -67,5 +63,8 @@ jobs:
             sudo service php8.2-fpm restart
           EOF
 
+      - name: Run tests
+        run: |
+          ./vendor/bin/pest
       - name: Clean up
         run: rm private_key.pem
