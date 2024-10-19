@@ -13,4 +13,9 @@ class PaymentTransaction extends Model
     const STATUS_CREATED = 'created';
     const STATUS_PAID = 'paid';
     const STATUS_CANCELED = 'canceled';
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }

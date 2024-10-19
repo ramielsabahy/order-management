@@ -13,7 +13,7 @@ class UpdateOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return request()->user()->id == request()->order->id;
     }
 
     /**

@@ -27,44 +27,34 @@ it('Store New Order', function () {
 });
 
 it('can list user orders with filters and pagination', function () {
-    // Create a user and some orders for testing
     $user = User::factory()->create();
     Order::factory()->count(15)->create(['user_id' => $user->id]);
 
-    // Simulate pagination data
     $filterData = [
         'per_page' => 10,
         'page' => 1
     ];
 
-    // Mock the request pagination query parameters
     request()->merge($filterData);
 
-    // Call the list method to get the paginated orders
     $orders = $this->orderService->list($filterData, $user);
 
-    // Assert that the result is a LengthAwarePaginator instance
     expect($orders)->toBeInstanceOf(LengthAwarePaginator::class)
         ->and($orders->count())->toBe(10)
         ->and($orders->total())->toBe(15);
 });
 
 it('can update an existing order', function () {
-    // Create a user and an order for testing
     $user = User::factory()->create();
     $order = Order::factory()->create(['user_id' => $user->id, 'product_name' => 'Old Product Name']);
 
-    // Data to update the order
     $updateData = [
         'status'    => OrderStatusEnum::PAID->value,
     ];
 
-    // Call the update method to update the order
     $this->orderService->update($updateData, $order);
 
-    // Refresh the order instance to get the updated data
     $order->refresh();
 
-    // Assert that the order was updated successfully
     expect($order->status)->toBe(OrderStatusEnum::PAID->value);
 });

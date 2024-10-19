@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\API;
 
+use App\Exceptions\ValidationException;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreOrderRequest extends FormRequest
@@ -26,5 +28,10 @@ class StoreOrderRequest extends FormRequest
             'quantity'          => ['required', 'integer', 'min:1'],
             'price'             => ['required', 'integer', 'min:1'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new ValidationException($validator->getMessageBag()->first());
     }
 }

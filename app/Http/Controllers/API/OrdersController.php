@@ -32,9 +32,7 @@ class OrdersController extends BaseAPIController
             'user_id' => auth()->user()->id,
             'status' => PaymentTransaction::STATUS_CREATED,
         ]);
-        return $this->successResponse([
-            'data' => $paypalOrder,
-        ]);
+        return $this->successResponse($paypalOrder);
     }
 
     public function index(ListOrdersRequest $request, OrderService $orderService)
@@ -47,5 +45,6 @@ class OrdersController extends BaseAPIController
     public function update(Order $order, UpdateOrderRequest $request, OrderService $orderService)
     {
         $orderService->update(data: $request->validated(), order: $order);
+        return $this->successResponse(data: new OrderResource($order));
     }
 }

@@ -3,10 +3,8 @@
 namespace App\Services;
 
 use App\Models\PaymentTransaction;
+use App\Notifications\OrderStatusChangedNotification;
 use Illuminate\Support\Facades\Http;
-use Stripe\Exception\CardException;
-use Stripe\PaymentIntent;
-use Stripe\Stripe;
 
 class PayPalPaymentService
 {
@@ -60,9 +58,13 @@ class PayPalPaymentService
         $token = $this->getToken();
         $response = Http::withToken($token)->withBody("", 'application/json')
             ->post(config('services.paypal.endpoint_v2').'/checkout/orders/'.$paypalOrderId.'/capture');
-        PaymentTransaction::where('paypal_order_id', $paypalOrderId)->update([
+        $transaction = PaymentTransaction::where('paypal_order_id', $paypalOrderId)->first();
+        $transaction->update([
             'status' => PaymentTransaction::STATUS_PAID,
         ]);
+
+        $transaction->order->user->notify(new OrderStatusChangedNotification(transaction: $transaction));
+
         return $response->json();
     }
 
